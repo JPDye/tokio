@@ -455,6 +455,55 @@ impl TcpSocket {
         self.inner.nodelay()
     }
 
+    /// Sets the value of the `TCP_QUICKACK` option on this socket.
+    ///
+    /// If set, this option disables the delay on sending ACKs, increasing the number of
+    /// ACKs sent but potentially decreasing latency and avoiding issues that can occur when
+    /// the sending party is using Nagles algorithm (see [`set_nodelay`]).
+    ///
+    /// Reference this: todo!()
+    /// Check if setting once is enough, potentiall havy to reset
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use tokio::net::TcpSocket;
+    ///
+    /// # async fn dox() -> Result<(), Box<dyn std::error::Error>> {
+    /// let socket = TcpSocket::new_v4()?;
+    ///
+    /// socket.set_quickack(true)?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[cfg(any(target_os = "android", target_os = "fuschia", target_os = "linux"))]
+    pub fn set_quickack(&self, quickack: bool) -> io::Result<()> {
+        self.inner.set_quickack(quickack)
+    }
+
+    /// Gets the value of the `TCP_QUICKACK` option on this socket.
+    ///
+    /// For more information about this option, see [`set_quickack`].
+    ///
+    /// [`set_quickack`]: TcpSocket::set_quickack
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use tokio::net::TcpSocket;
+    ///
+    /// # async fn dox() -> Result<(), Box<dyn std::error::Error>> {
+    /// let socket = TcpSocket::new_v4()?;
+    ///
+    /// println!("{:?}", socket.quickack()?);
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[cfg(any(target_os = "android", target_os = "fuschia", target_os = "linux"))]
+    pub fn quickack(&self) -> io::Result<bool> {
+        self.inner.quickack()
+    }
+
     /// Gets the value of the `IP_TOS` option for this socket.
     ///
     /// For more information about this option, see [`set_tos`].
